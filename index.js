@@ -107,71 +107,22 @@ async function ifoptableexist(req, res, next) {
 };
 
 // API Endpoints
-app.post("/api/op/post", ifoptableexist, upload.array('prescription', 3), async (req, res) => {
+app.post('/api/op/post', upload.array('prescription'), (req, res) => {
     try {
-        // Extract file buffers
-        const buffers = req.files.map(file => file.buffer);
+        const { doctorName, diagnostics, medications, radiologyInterpretation, nextFollowUpDate, patientName, patientPhone, patientId, patientGender } = req.body;
+        const prescriptions = req.files; // Array of uploaded files
 
-        // Extract other form data
-        const {
-            doctorName,
-            diagnostics,
-            medications,
-            radiologyInterpretation,
-            nextFollowUpDate,
-            patientName,
-            patientPhone,
-            patientId,
-            patientGender
-        } = req.body;
+        // Process the form data and files
+        console.log('Form Data:', { doctorName, diagnostics, medications, radiologyInterpretation, nextFollowUpDate, patientName, patientPhone, patientId, patientGender });
+        console.log('Files:', prescriptions);
 
-        // Log data being inserted
-        console.log('Inserting data:', {
-            doctorName,
-            diagnostics,
-            medications,
-            radiologyInterpretation,
-            nextFollowUpDate,
-            buffers,
-            patientName,
-            patientPhone,
-            patientId,
-            patientGender
-        });
-
-        // SQL insert query
-        const insertQuery = `
-            INSERT INTO op_table (
-                doctor_name, diagnostics, medications, radiology_interpretation, next_follow_up_date, 
-                prescription, patient_name, patient_phone, patient_id, patient_gender
-            ) VALUES (
-                $1, $2, $3, $4, $5, $6, $7, $8, $9, $10
-            )
-        `;
-
-        // Execute the query
-        await db.query(insertQuery, [
-            doctorName,
-            diagnostics,
-            medications,
-            radiologyInterpretation,
-            nextFollowUpDate,
-            buffers,
-            patientName,
-            patientPhone,
-            patientId,
-            patientGender
-        ]);
-
-        // Send success response
-        res.status(200).json({ message: 'Data inserted successfully' });
+        // Respond with success
+        res.status(200).json({ message: 'Form submitted successfully' });
     } catch (error) {
-        // Log error message and send error response
-        console.error('Error during database insertion:', error.message);
-        res.status(500).json({ error: 'An error occurred' });
+        console.error('Server Error:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 });
-
 app.post("/api/ip/post", ifiptableexist, upload.array('prescription', 3), async (req, res) => {
     try {
         const buffers = req.files.map(file => file.buffer);
