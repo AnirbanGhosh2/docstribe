@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>IP Form</title>
+    </head>
+
+    <body>
+        <h1>IP Form</h1>
+        <form action="/photo1" method="post" enctype="multipart/form-data">
+            <label for="doctorName">Doctor Name:</label>
+            <input type="text" id="doctorName" name="doctorName" required><br><br>
+
+            <label for="surgeryName">Surgery Name Recommended:</label>
+            <input type="text" id="surgeryName" name="surgeryName" required><br><br>
+
+            <label for="prescription">Medical Prescription Document:</label>
+            <input type="file" id="prescription" name="prescription" accept="image/*" capture="camera" required
+                multiple><br><br>
+
+            <label for="patientName">Patient Name:</label>
+            <input type="text" id="patientName" name="patientName" required><br><br>
+
+            <label for="patientPhone">Patient Phone:</label>
+            <input type="tel" id="patientPhone" name="patientPhone" required><br><br>
+
+            <label for="patientId">Patient ID:</label>
+            <input type="text" id="patientId" name="patientId" required><br><br>
+
+            <label for="patientGender">Patient Gender:</label>
+            <select id="patientGender" name="patientGender" required>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select><br><br>
+
+            <button type="submit">Submit</button>
+        </form>
+    </body>
+
+    </html>
+
+
+</body>
+
+</html>
