@@ -107,10 +107,39 @@ async function ifoptableexist(req, res, next) {
 };
 
 // API Endpoints
-app.post("/api/op/post", upload.array('prescription', 3), ifoptableexist, async (req, res) => {
+app.post("/api/op/post", ifoptableexist, upload.array('prescription', 3), async (req, res) => {
     try {
+        // Extract file buffers
         const buffers = req.files.map(file => file.buffer);
-        const { doctorName, surgeryName, patientName, patientPhone, patientId, patientGender } = req.body;
+
+        // Extract other form data
+        const {
+            doctorName,
+            diagnostics,
+            medications,
+            radiologyInterpretation,
+            nextFollowUpDate,
+            patientName,
+            patientPhone,
+            patientId,
+            patientGender
+        } = req.body;
+
+        // Log data being inserted
+        console.log('Inserting data:', {
+            doctorName,
+            diagnostics,
+            medications,
+            radiologyInterpretation,
+            nextFollowUpDate,
+            buffers,
+            patientName,
+            patientPhone,
+            patientId,
+            patientGender
+        });
+
+        // SQL insert query
         const insertQuery = `
             INSERT INTO op_table (
                 doctor_name, diagnostics, medications, radiology_interpretation, next_follow_up_date, 
@@ -119,13 +148,27 @@ app.post("/api/op/post", upload.array('prescription', 3), ifoptableexist, async 
                 $1, $2, $3, $4, $5, $6, $7, $8, $9, $10
             )
         `;
+
+        // Execute the query
         await db.query(insertQuery, [
-            doctorName, surgeryName, null, null, null, buffers, patientName, patientPhone, patientId, patientGender
+            doctorName,
+            diagnostics,
+            medications,
+            radiologyInterpretation,
+            nextFollowUpDate,
+            buffers,
+            patientName,
+            patientPhone,
+            patientId,
+            patientGender
         ]);
-        res.status(200).send('Data inserted successfully');
+
+        // Send success response
+        res.status(200).json({ message: 'Data inserted successfully' });
     } catch (error) {
-        console.error('Error in /api/op/post:', error);
-        res.status(500).send('Server Error');
+        // Log error message and send error response
+        console.error('Error during database insertion:', error.message);
+        res.status(500).json({ error: 'An error occurred' });
     }
 });
 
